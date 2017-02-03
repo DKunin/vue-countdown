@@ -335,7 +335,7 @@ a {
           transform: scale(1.05);
 }
 
-button {
+.button {
   z-index: 20;
   position: absolute;
   display: block;
@@ -358,11 +358,13 @@ button {
   transition: .2s background, .4s .3s transform, .4s .3s opacity;
   cursor: pointer;
 }
-button:hover {
+.button:hover {
   background: #fff;
   color: currentColor;
 }
-
+.button.button-refetch {
+  bottom: 5em;
+}
 .waves {
   position: absolute;
   bottom: 0;

@@ -172,10 +172,11 @@ new Vue({
             }
         },
         giveWarning: function giveWarning() {
-            navigator.vibrate([ 300, 300, 300 ]);
+            navigator.vibrate([ 300, 300, 300, 300, 300 ]);
         },
         timeIsUpMessage: function timeIsUpMessage() {
-            navigator.vibrate([500, 1000]);
+            startPeristentVibrate(1000, 500);
+            // navigator.vibrate([500, 1000]);
         },
         timerResetMessage: function timerResetMessage() {
             navigator.vibrate(300);
@@ -183,6 +184,11 @@ new Vue({
         reset: function reset() {
             this.resetTimer();
             this.timerResetMessage();
+            stopVibrate();
+        },
+        refetch: function() {
+            localStorage.clear();
+            location.reload(true);
         },
         mouseOver: function mouseOver(type) {
             this.stageBg = settings[type].stageBg;

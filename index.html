@@ -79,8 +79,11 @@
                 <span>%</span>
             </div>
         </div>
-        <button @click="reset">
+        <button @click="reset" class="button">
             {{ percentsLeft > 0 ? activeReminder.buttonTxt : 'Reset' }}
+        </button>
+        <button @click="refetch" class="button button-refetch">
+            refetch
         </button>
     </div>
 
