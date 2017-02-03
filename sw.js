@@ -1,4 +1,4 @@
-importScripts('serviceworker-cache-polyfill.js');
+// importScripts('serviceworker-cache-polyfill.js');
 
 var CACHE_NAME = 'simple-pwa-v2';
 
@@ -18,7 +18,7 @@ var urlsToCache = [
     './assets/img/icon-196.png',
     './assets/img/icon-384.png',
     './script.js',
-    // './build.js',
+    './nosleep.js',
     './styles.css'
 ];
 
