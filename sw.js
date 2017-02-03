@@ -1,9 +1,6 @@
-// importScripts('serviceworker-cache-polyfill.js');
+const CACHE_NAME = 'vue-count-down-2';
 
-var CACHE_NAME = 'simple-pwa-v2';
-
-// File want to cache
-var urlsToCache = [
+const urlsToCache = [
     './',
     './index.html',
     './manifest.json',
@@ -58,35 +55,6 @@ self.onfetch = function(e) {
                     });
             })
         );
-    } else if (e.request.url.indexOf('src/assets/img-content') > -1) {
-        e.respondWith(
-            caches.match(e.request).then(function(res) {
-                if (res)
-                    return res;
-
-                return fetch(e.request.clone(), {
-                    mode: 'no-cors'
-                }).then(function(newRes) {
-                    if (
-                        !newRes || newRes.status !== 200 ||
-                            newRes.type !== 'basic'
-                    ) {
-                        return newRes;
-                    }
-
-                    caches
-                        .open(CACHE_NAME)
-                        .then(function(cache) {
-                            cache.put(e.request, newRes.clone());
-                        })
-                        .catch(err => {
-                            console.log('[serviceWorker]: Fetch Error ' + err);
-                        });
-
-                    return newRes;
-                });
-            })
-        );
     } else {
         e.respondWith(
             caches.match(e.request).then(function(res) {
@@ -99,7 +67,7 @@ self.onfetch = function(e) {
 self.onactivate = function(e) {
     console.log('[serviceWorker]: Actived');
 
-    var whiteList = [ 'simple-pwa-v2' ];
+    var whiteList = [ 'vue-count-down-2' ];
 
     e.waitUntil(
         caches

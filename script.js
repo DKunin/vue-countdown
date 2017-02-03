@@ -1,15 +1,32 @@
 'use strict';
 
-var padDigits = function padDigits(number, digits) {
+const padDigits = function padDigits(number, digits) {
     return Array(Math.max(digits - String(number).length + 1, 0)).join(0) +
         number;
 };
-var calculatePercentsLeft = function calculatePercentsLeft(value, from) {
+const calculatePercentsLeft = function calculatePercentsLeft(value, from) {
     return Math.floor(Math.ceil(value / 1000) / (from * 60) * 100);
 };
-var calculateScaleFactor = function calculateScaleFactor(percent) {
+const calculateScaleFactor = function calculateScaleFactor(percent) {
     return 1 - (100 - percent) / 100;
 };
+
+let vibrateInterval;
+
+function startVibrate(duration) {
+    navigator.vibrate(duration);
+}
+
+function stopVibrate() {
+    if(vibrateInterval) clearInterval(vibrateInterval);
+    navigator.vibrate(0);
+}
+
+function startPeristentVibrate(duration, interval) {
+    vibrateInterval = setInterval(function() {
+        startVibrate(duration);
+    }, interval);
+}
 
 function guid() {
     function s4() {
@@ -22,7 +39,7 @@ function guid() {
         s4() +
         s4();
 }
-var settings = {
+const settings = {
     minute: {
         buttonTxt: 'Reset',
         waveFrontColor: '#34495e',
@@ -65,7 +82,7 @@ new Vue({
         };
     },
     mounted: function mounted() {
-        var _this = this;
+        const _this = this;
         this.resetTimer();
     },
     computed: {
@@ -104,12 +121,12 @@ new Vue({
             this.resetTimer();
         },
         resetTimer: function resetTimer() {
-            var durationInSeconds = 60 * this.activeReminder.durationInMinutes;
+            const durationInSeconds = 60 * this.activeReminder.durationInMinutes;
             this.startTimer(durationInSeconds);
         },
         startTimer: function startTimer(secondsLeft) {
-            var _this2 = this;
-            var now = new Date();
+            const _this2 = this;
+            const now = new Date();
             if (this.countdown) {
                 window.clearInterval(this.countdown);
             }
@@ -140,7 +157,7 @@ new Vue({
             if (this.timer.length > 2) {
                 this.timer.splice(2);
             }
-            var newTime = {
+            const newTime = {
                 id: guid(),
                 value: padDigits(ts.minutes, 2) + ':' + padDigits(ts.seconds, 2)
             };
