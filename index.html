@@ -47,7 +47,7 @@
             </transition-group>
         </div>
         <div class="waves" :style="waveStyles">
-            <div class="wave wave--back" :style="{ color: activeReminder.waveBackColor }">
+            <div :class="[{ 'wave--paused': !isRunning },'wave wave--back']" :style="{ color: activeReminder.waveBackColor }">
                 <div class="water">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 32" preserveAspectRatio="none">
                         <title>wave2</title>
@@ -61,7 +61,7 @@
                     </svg>
                 </div>
             </div>
-            <div class="wave wave--front" :style="{ color: activeReminder.waveFrontColor }">
+            <div :class="[{ 'wave--paused': !isRunning },'wave wave--front']" :style="{ color: activeReminder.waveFrontColor }">
                 <div class="water">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 32" preserveAspectRatio="none">
                         <title>wave2</title>
@@ -86,6 +86,9 @@
         </div>
         <button @click="reset" class="button">
             {{ percentsLeft > 0 ? activeReminder.buttonTxt : 'Reset' }}
+        </button>
+        <button @click="toggleTimer" class="button button-pause">
+            {{ isRunning ? 'pause' : 'run' }}
         </button>
     </div>
 

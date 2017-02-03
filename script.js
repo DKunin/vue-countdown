@@ -75,6 +75,7 @@ new Vue({
             timer: [],
             selectedVoice: {},
             countdownObj: {},
+            isRunning: false,
             activeReminder: settings.minute,
             menuOpen: false,
             isListening: false,
@@ -84,11 +85,6 @@ new Vue({
     mounted: function mounted() {
         const _this = this;
         this.resetTimer();
-    },
-    computed: {
-        supportSpeechSynth: function supportSpeechSynth() {
-            return 'speechSynthesis' in window;
-        }
     },
     watch: {
         percentsLeft: function percentsLeft(val, oldVal) {
@@ -132,6 +128,7 @@ new Vue({
             }
             this.countdown = countdown(
                 function(ts) {
+                    _this2.isRunning = true;
                     _this2.secondsLeft = Math.ceil(ts.value / 1000);
                     _this2.percentsLeft = calculatePercentsLeft(
                         ts.value,
@@ -165,6 +162,14 @@ new Vue({
         },
         pauseTimer: function pauseTimer() {
             window.clearInterval(this.countdown);
+            this.isRunning = false;
+        },
+        toggleTimer: function toggleTimer() {
+            if (this.isRunning) {
+                this.pauseTimer();
+            } else {
+                this.startTimer(this.secondsLeft - 1);
+            }
         },
         continueTimer: function continueTimer() {
             if (this.secondsLeft > 0) {
@@ -176,15 +181,14 @@ new Vue({
         },
         timeIsUpMessage: function timeIsUpMessage() {
             startPeristentVibrate(1000, 500);
-            // navigator.vibrate([500, 1000]);
         },
         timerResetMessage: function timerResetMessage() {
-            navigator.vibrate(300);
+            navigator.vibrate([300, 300]);
         },
         reset: function reset() {
             this.resetTimer();
             this.timerResetMessage();
-            stopVibrate();
+            setTimeout(stopVibrate, 1000)
         },
         refetch: function() {
             localStorage.clear();
