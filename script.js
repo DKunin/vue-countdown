@@ -1,4 +1,5 @@
 'use strict';
+
 var padDigits = function padDigits(number, digits) {
     return Array(Math.max(digits - String(number).length + 1, 0)).join(0) +
         number;
@@ -22,25 +23,11 @@ function guid() {
         s4();
 }
 var settings = {
-    water: {
-        buttonTxt: 'Drink',
-        waveFrontColor: '#32BAFA',
-        waveBackColor: '#2C7FBE',
-        stageBg: '#1E384C',
-        durationInMinutes: 1
-    },
-    coffee: {
-        buttonTxt: 'Drink coffee',
-        waveFrontColor: '#b39374',
-        waveBackColor: '#7a6057',
-        stageBg: '#392a2c',
-        durationInMinutes: 2
-    },
-    break: {
-        buttonTxt: 'Take a break',
-        waveFrontColor: '#02C39A',
-        waveBackColor: '#028090',
-        stageBg: '#012F35',
+    minute: {
+        buttonTxt: 'Reset',
+        waveFrontColor: '#34495e',
+        waveBackColor: '#95a5a6',
+        stageBg: '#2c3e50',
         durationInMinutes: 1
     },
     pomodoro: {
@@ -49,6 +36,13 @@ var settings = {
         waveBackColor: '#c0392b',
         stageBg: '#2c3e50',
         durationInMinutes: 15
+    },
+    softegg: {
+        buttonTxt: 'Another One?',
+        waveFrontColor: '#ecf0f1',
+        waveBackColor: '#f39c12',
+        stageBg: '#bdc3c7',
+        durationInMinutes: 6
     }
 };
 new Vue({
@@ -62,26 +56,17 @@ new Vue({
             waveStyles: '',
             duration: 1,
             timer: [],
-            voicesOpen: false,
-            voices: [],
             selectedVoice: {},
             countdownObj: {},
-            activeReminder: settings.water,
+            activeReminder: settings.minute,
             menuOpen: false,
             isListening: false,
-            voiceTooltipClosed: false,
-            stageBg: settings.water.stageBg
+            stageBg: settings.minute.stageBg
         };
     },
     mounted: function mounted() {
         var _this = this;
         this.resetTimer();
-        this.voices = speechSynthesis.getVoices();
-        if (this.voices.length === 0) {
-            speechSynthesis.onvoiceschanged = function() {
-                _this.voices = speechSynthesis.getVoices();
-            };
-        }
     },
     computed: {
         supportSpeechSynth: function supportSpeechSynth() {
@@ -110,13 +95,6 @@ new Vue({
             } else {
                 this.continueTimer();
             }
-        },
-        toggleVoicesMenu: function toggleVoicesMenu() {
-            this.voicesOpen = !this.voicesOpen;
-        },
-        voiceSelected: function voiceSelected(voice) {
-            this.selectedVoice = voice;
-            speechSynth.voice = voice;
         },
         start: function start(reminder) {
             this.setActiveReminder(reminder);
@@ -153,12 +131,6 @@ new Vue({
                         _this2.timeIsUpMessage();
                         _this2.pauseTimer();
                         _this2.timer = [];
-                        setTimeout(
-                            function() {
-                                _this2.startListenVoiceCommands();
-                            },
-                            1500
-                        );
                     }
                 },
                 now.getTime() + secondsLeft * 1000
@@ -182,35 +154,18 @@ new Vue({
                 this.startTimer(this.secondsLeft - 1);
             }
         },
-        giveWarning: function giveWarning() {},
+        giveWarning: function giveWarning() {
+            navigator.vibrate([ 300, 300, 300 ]);
+        },
         timeIsUpMessage: function timeIsUpMessage() {
-            navigator.vibrate(1000);
+            navigator.vibrate([500, 1000]);
         },
         timerResetMessage: function timerResetMessage() {
-            navigator.vibrate([ 500, 300, 100 ]);
+            navigator.vibrate(300);
         },
         reset: function reset() {
             this.resetTimer();
             this.timerResetMessage();
-        },
-        startListenVoiceCommands: function startListenVoiceCommands() {
-            var _this3 = this;
-            if (this.isListening)
-                return;
-            this.isListening = true;
-            recognition.start();
-            recognition.onresult = function(event) {
-                var last = event.results.length - 1;
-                if (event.results[last][0].transcript == 'reset') {
-                    _this3.resetTimer();
-                    _this3.timerResetMessage();
-                }
-            };
-            recognition.onend = function() {
-                _this3.isListening = false;
-                _this3.voiceTooltipClosed = true;
-                recognition.stop();
-            };
         },
         mouseOver: function mouseOver(type) {
             this.stageBg = settings[type].stageBg;
