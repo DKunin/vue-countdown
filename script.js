@@ -47,13 +47,6 @@ const settings = {
         stageBg: '#2c3e50',
         durationInMinutes: 1
     },
-    pomodoro: {
-        buttonTxt: 'Switch task',
-        waveFrontColor: '#e74c3c',
-        waveBackColor: '#c0392b',
-        stageBg: '#2c3e50',
-        durationInMinutes: 15
-    },
     softegg: {
         buttonTxt: 'Another One?',
         waveFrontColor: '#ecf0f1',
